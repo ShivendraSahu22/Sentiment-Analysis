@@ -4,7 +4,7 @@ with open('model/model1.pkl', 'rb') as f:
     model = pickle.load(f)
 
 with open('model/vectorizer.pkl', 'rb') as f:
-    model = pickle.load(f)
+    vectorizer = pickle.load(f)
 
 # MLFlow
 MODEL_VERSION = '1.0.0'
@@ -13,7 +13,7 @@ def predict_sentiment(user_input):
     text = user_input.text
 
     # Convert text to TF-IDF features
-    transformed_text = model.transform([text])
+    transformed_text = vectorizer.transform([text])
 
     # Predict class
     prediction = model.predict(transformed_text)[0]
