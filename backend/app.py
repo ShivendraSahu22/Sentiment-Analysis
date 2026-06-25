@@ -20,7 +20,7 @@ app.add_middleware(
 # human readable       
 @app.get('/')
 def home():
-    return {'message':'Student Marks Predictor API'}
+    return {'message':'Sentiment Analysis API'}
 
 @app.get('/health')
 def health_check():
@@ -36,9 +36,9 @@ def predict(data: UserInput):
 
     try:
 
-        prediction = predict_marks(data)
+        prediction = predict_sentiment(data)
 
-        return {'predicted_marks': prediction}
+        return {'predicted_sentiment': prediction}
     
     except Exception as e:
 

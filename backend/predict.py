@@ -3,14 +3,30 @@ import pickle
 with open('model/model1.pkl', 'rb') as f:
     model = pickle.load(f)
 
+with open('model/vectorizer.pkl', 'rb') as f:
+    model = pickle.load(f)
+
 # MLFlow
 MODEL_VERSION = '1.0.0'
+def predict_sentiment(user_input):
 
-def predict_marks(user_input):
-    # Convert user input to a format suitable for prediction
-    input_data = [[user_input.sentiment]]
-    
-    # Make prediction using the loaded model
-    predicted_marks = model.predict(input_data)
-    
-    return float(predicted_sentiment[0])
+    text = user_input.text
+
+    # Convert text to TF-IDF features
+    transformed_text = model.transform([text])
+
+    # Predict class
+    prediction = model.predict(transformed_text)[0]
+
+    # Predict probability
+    confidence = model.predict_proba(transformed_text).max()
+
+    sentiment_map = {
+        0: "Negative",
+        1: "Positive"
+    }
+
+    return {
+        "sentiment": sentiment_map[prediction],
+        "sentiment_score": float(confidence)
+    }
