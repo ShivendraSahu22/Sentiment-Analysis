@@ -61,17 +61,19 @@ async function analyzeSentiment() {
 
         document.getElementById("progressBar").style.width = confidence + "%";
 
-        const sentimentElement = document.getElementById("sentiment");
+        const sentiment = data?.sentiment || "unknown";
 
-        if (data.sentiment.toLowerCase().includes("positive")) {
+        if (sentiment.toLowerCase().includes("positive")) {
             sentimentElement.style.color = "#22c55e";
         }
-        else if (data.sentiment.toLowerCase().includes("negative")) {
+        else if (sentiment.toLowerCase().includes("negative")) {
             sentimentElement.style.color = "#ef4444";
         }
         else {
             sentimentElement.style.color = "#facc15";
         }
+
+document.getElementById("sentiment").textContent = sentiment;
 
     } catch (error) {
 
