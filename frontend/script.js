@@ -45,7 +45,7 @@ async function analyzeSentiment() {
     try {
 
         const response = await fetch(
-            "http://localhost:8000/predict",
+            "https://sentiment-analysis-07s3.onrender.com/predict",
             {
                 method: "POST",
                 headers: {
