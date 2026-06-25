@@ -53,7 +53,6 @@ async function analyzeSentiment() {
                     "application/json"
                 },
                 body: JSON.stringify({
-                    text: text
                 })
             }
         );
