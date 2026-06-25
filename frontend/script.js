@@ -87,3 +87,7 @@ async function analyzeSentiment() {
         btnText.textContent = originalText;
     }
 }
+
+const data = await response.json();
+
+console.log("API RESPONSE:", data);
