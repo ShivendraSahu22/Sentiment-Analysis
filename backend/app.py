@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from schema.user_input import UserInput
 from schema.prediction_response import PredictionResponse
-from predict import predict_sentiment
+from predict import predict_sentiment, model, MODEL_VERSION
 from fastapi.middleware.cors import CORSMiddleware
 
 
