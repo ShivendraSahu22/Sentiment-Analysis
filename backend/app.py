@@ -1,12 +1,19 @@
 from fastapi import FastAPI, HTTPException
-from schema.user_input import UserInput
-from schema.prediction_response import PredictionResponse
-from predict import predict_sentiment, model, MODEL_VERSION
 from fastapi.middleware.cors import CORSMiddleware
 
+from schema.user_input import UserInput
+from schema.prediction_response import PredictionResponse
 
+from predict import (
+    predict_sentiment,
+    model,
+    MODEL_VERSION
+)
 
-app = FastAPI()
+app = FastAPI(
+    title="Sentiment Analysis API",
+    version=MODEL_VERSION
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,29 +24,39 @@ app.add_middleware(
 )
 
 
-# human readable       
-@app.get('/')
+@app.get("/")
 def home():
-    return {'message':'Sentiment Analysis API'}
 
-@app.get('/health')
-def health_check():
     return {
-        'status': 'OK',
-        'version': MODEL_VERSION,
-        'model_loaded': model is not None
+        "message": "Sentiment Analysis API"
     }
 
 
-@app.post('/predict', response_model=PredictionResponse)
+@app.get("/health")
+def health_check():
+
+    return {
+        "status": "OK",
+        "version": MODEL_VERSION,
+        "model_loaded": model is not None
+    }
+
+
+@app.post(
+    "/predict",
+    response_model=PredictionResponse
+)
 def predict(data: UserInput):
 
     try:
 
         prediction = predict_sentiment(data)
 
-        return {'predicted_sentiment': prediction}
-    
+        return prediction
+
     except Exception as e:
 
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )

@@ -1,12 +1,11 @@
 import pickle
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
-# ==================================
+# ==========================
 # RNN Model
-# ==================================
+# ==========================
 
 class RNN(nn.Module):
 
@@ -18,9 +17,9 @@ class RNN(nn.Module):
         self.num_layers = num_layers
 
         self.rnn = nn.RNN(
-            input_size,
-            hidden_size,
-            num_layers,
+            input_size=input_size,
+            hidden_size=hidden_size,
+            num_layers=num_layers,
             batch_first=True
         )
 
@@ -42,27 +41,27 @@ class RNN(nn.Module):
         return out
 
 
-# ==================================
+# ==========================
 # Load Vectorizer
-# ==================================
+# ==========================
 
 with open("model/vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)
 
 
-# ==================================
+# ==========================
 # Config
-# ==================================
+# ==========================
 
-INPUT_SIZE = 5000      # Training ke time jo use kiya tha
+INPUT_SIZE = 5000
 HIDDEN_SIZE = 128
 
 MODEL_VERSION = "1.0"
 
 
-# ==================================
+# ==========================
 # Load Model
-# ==================================
+# ==========================
 
 model = RNN(
     input_size=INPUT_SIZE,
@@ -79,27 +78,23 @@ model.load_state_dict(checkpoint)
 model.eval()
 
 
-# ==================================
-# Prediction Function
-# ==================================
+# ==========================
+# Prediction
+# ==========================
 
 def predict_sentiment(user_input):
 
     text = user_input.text
 
-    # Text → TF-IDF
     features = vectorizer.transform([text])
 
-    # Sparse → Dense
     features = features.toarray()
 
-    # Numpy → Tensor
     tensor_input = torch.tensor(
         features,
         dtype=torch.float32
     )
 
-    # (batch, seq_len, features)
     tensor_input = tensor_input.unsqueeze(1)
 
     with torch.no_grad():
@@ -118,6 +113,6 @@ def predict_sentiment(user_input):
     }
 
     return {
-        "sentiment": sentiment_map[prediction],
-        "sentiment_score": round(confidence, 4)
+        "predicted_sentiment": sentiment_map[prediction],
+        "predicted_sentiment_score": round(confidence, 4)
     }

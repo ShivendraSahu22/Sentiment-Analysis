@@ -14,12 +14,11 @@ class UserInput(BaseModel):
     ]
 
     @field_validator("text")
+    @classmethod
     def validate_text(cls, value):
 
         if not value.strip():
-            raise ValueError(
-                "Text cannot be empty"
-            )
+            raise ValueError("Text cannot be empty")
 
         return value
     
