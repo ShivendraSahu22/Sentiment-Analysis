@@ -4,19 +4,16 @@ btn.addEventListener("click", analyzeSentiment);
 
 async function analyzeSentiment() {
 
-    const text =
-        document.getElementById("textInput").value;
+    const text = document.getElementById("textInput").value;
 
     if (!text.trim()) {
         alert("Please enter text");
         return;
     }
 
-    btn.classList.add("loading");
     btn.disabled = true;
 
-    const btnText =
-        document.getElementById("btnText");
+    const btnText = document.getElementById("btnText");
 
     const loadingTexts = [
         "Analyzing...",
@@ -27,19 +24,12 @@ async function analyzeSentiment() {
 
     let index = 0;
 
+    const originalText = "Analyze Sentiment";
+
+    // animation
     const textAnimation = setInterval(() => {
-
-        btn.classList.remove("loading");
-
-        btnText.style.display = "inline";
-
-        btnText.textContent =
-            loadingTexts[index];
-
-        index =
-            (index + 1) %
-            loadingTexts.length;
-
+        btnText.textContent = loadingTexts[index];
+        index = (index + 1) % loadingTexts.length;
     }, 1000);
 
     try {
@@ -49,87 +39,51 @@ async function analyzeSentiment() {
             {
                 method: "POST",
                 headers: {
-                    "Content-Type":
-                    "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    text: "I am hapyy"
+                    text: text   // ✅ FIXED: user input used
                 })
             }
         );
 
+        if (!response.ok) {
+            throw new Error("Server Error: " + response.status);
+        }
+
         const data = await response.json();
 
-        document.getElementById(
-            "sentiment"
-        ).textContent =
-            data.sentiment;
+        document.getElementById("sentiment").textContent = data.sentiment;
 
-        const confidence =
-            (data.confidence * 100)
-            .toFixed(1);
+        const confidence = (data.confidence * 100).toFixed(1);
 
-        document.getElementById(
-            "confidence"
-        ).textContent =
-            confidence + "%";
+        document.getElementById("confidence").textContent = confidence + "%";
 
-        document.getElementById(
-            "progressBar"
-        ).style.width =
-            confidence + "%";
+        document.getElementById("progressBar").style.width = confidence + "%";
 
-        const sentimentElement =
-            document.getElementById(
-                "sentiment"
-            );
+        const sentimentElement = document.getElementById("sentiment");
 
-        if (
-            data.sentiment
-            .toLowerCase()
-            .includes("positive")
-        ) {
-            sentimentElement.style.color =
-                "#22c55e";
+        if (data.sentiment.toLowerCase().includes("positive")) {
+            sentimentElement.style.color = "#22c55e";
         }
-
-        else if (
-            data.sentiment
-            .toLowerCase()
-            .includes("negative")
-        ) {
-            sentimentElement.style.color =
-                "#ef4444";
+        else if (data.sentiment.toLowerCase().includes("negative")) {
+            sentimentElement.style.color = "#ef4444";
         }
-
         else {
-            sentimentElement.style.color =
-                "#facc15";
+            sentimentElement.style.color = "#facc15";
         }
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
+        alert("Failed to connect API");
 
-        alert(
-            "Failed to connect API"
-        );
-
-    }
-
-    finally {
+    } finally {
 
         clearInterval(textAnimation);
 
-        btn.classList.remove("loading");
-
         btn.disabled = false;
 
-        btnText.textContent =
-            "Analyze Sentiment";
-
+        btnText.textContent = originalText;
     }
-
 }
