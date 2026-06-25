@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            🤖 SentimentAI
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <div class="input-card">
+
+            <h1>AI Sentiment Analysis</h1>
+
+            <textarea
+                id="textInput"
+                placeholder="Type your text here..."
+            ></textarea>
+
+            <button id="analyzeBtn">
+                <span id="btnText">Analyze Sentiment</span>
+                <span id="btnLoader" class="btn-loader"></span>
+            </button>
+
+        </div>
+
+        <div class="result-section">
+
+            <div class="result-card">
+                <h3>Sentiment</h3>
+                <h2 id="sentiment">---</h2>
+            </div>
+
+            <div class="result-card">
+                <h3>Confidence</h3>
+                <h2 id="confidence">---</h2>
+
+                <div class="progress">
+                    <div id="progressBar"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
