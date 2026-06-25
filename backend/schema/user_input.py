@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 from typing import Annotated
 
 
-class SentimentInput(BaseModel):
+class UserInput(BaseModel):
 
     text: Annotated[
         str,
@@ -22,3 +22,4 @@ class SentimentInput(BaseModel):
             )
 
         return value
+    
