@@ -1,19 +1,45 @@
 import pickle
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
-from models.rnn import RNN
-
 
 # ==================================
-# Configuration
+# RNN Model
 # ==================================
 
-INPUT_SIZE = 5000      # training ke time jo use kiya tha
-HIDDEN_SIZE = 128
-OUTPUT_SIZE = 2
+class RNN(nn.Module):
 
-MODEL_VERSION = "1.0"
+    def __init__(self, input_size, hidden_size=128, num_layers=1):
+
+        super().__init__()
+
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+
+        self.rnn = nn.RNN(
+            input_size,
+            hidden_size,
+            num_layers,
+            batch_first=True
+        )
+
+        self.fc = nn.Linear(hidden_size, 1)
+
+    def forward(self, x):
+
+        h0 = torch.zeros(
+            self.num_layers,
+            x.size(0),
+            self.hidden_size,
+            device=x.device
+        )
+
+        out, _ = self.rnn(x, h0)
+
+        out = self.fc(out[:, -1, :])
+
+        return out
 
 
 # ==================================
@@ -25,21 +51,30 @@ with open("model/vectorizer.pkl", "rb") as f:
 
 
 # ==================================
+# Config
+# ==================================
+
+INPUT_SIZE = 5000      # Training ke time jo use kiya tha
+HIDDEN_SIZE = 128
+
+MODEL_VERSION = "1.0"
+
+
+# ==================================
 # Load Model
 # ==================================
 
 model = RNN(
     input_size=INPUT_SIZE,
-    hidden_size=HIDDEN_SIZE,
-    output_size=OUTPUT_SIZE
+    hidden_size=HIDDEN_SIZE
 )
 
-model.load_state_dict(
-    torch.load(
-        "model/rnn_model.pth",
-        map_location=torch.device("cpu")
-    )
+checkpoint = torch.load(
+    "model/modelRNN.pth",
+    map_location="cpu"
 )
+
+model.load_state_dict(checkpoint)
 
 model.eval()
 
@@ -52,38 +87,30 @@ def predict_sentiment(user_input):
 
     text = user_input.text
 
-    # TF-IDF transform
+    # Text → TF-IDF
     features = vectorizer.transform([text])
 
-    # Sparse -> Dense
+    # Sparse → Dense
     features = features.toarray()
 
-    # Convert to Tensor
+    # Numpy → Tensor
     tensor_input = torch.tensor(
         features,
         dtype=torch.float32
     )
 
-    # RNN expects 3D tensor
+    # (batch, seq_len, features)
     tensor_input = tensor_input.unsqueeze(1)
 
     with torch.no_grad():
 
         output = model(tensor_input)
 
-        probabilities = F.softmax(
-            output,
-            dim=1
-        )
+        probability = torch.sigmoid(output)
 
-        confidence = torch.max(
-            probabilities
-        ).item()
+        confidence = float(probability.item())
 
-        prediction = torch.argmax(
-            probabilities,
-            dim=1
-        ).item()
+        prediction = 1 if confidence >= 0.5 else 0
 
     sentiment_map = {
         0: "Negative 😔",
@@ -91,9 +118,6 @@ def predict_sentiment(user_input):
     }
 
     return {
-        "sentiment":
-            sentiment_map[prediction],
-
-        "sentiment_score":
-            round(confidence, 4)
+        "sentiment": sentiment_map[prediction],
+        "sentiment_score": round(confidence, 4)
     }
