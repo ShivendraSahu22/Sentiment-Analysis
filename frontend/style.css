@@ -1,0 +1,218 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#0f172a;
+    min-height:100vh;
+    color:white;
+}
+
+/* Navbar */
+
+nav{
+    padding:25px 50px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:700;
+    color:#60a5fa;
+}
+
+/* Main */
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+/* Input Card */
+
+.input-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:25px;
+    padding:40px;
+}
+
+.input-card h1{
+    text-align:center;
+    margin-bottom:25px;
+
+    background:linear-gradient(
+        90deg,
+        #3b82f6,
+        #8b5cf6
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+textarea{
+    width:100%;
+    height:220px;
+    resize:none;
+    border:none;
+    outline:none;
+    border-radius:20px;
+    padding:20px;
+    background:#1e293b;
+    color:white;
+    font-size:16px;
+}
+
+/* Button */
+
+#analyzeBtn{
+    width:100%;
+    margin-top:20px;
+    padding:16px;
+    border:none;
+    border-radius:15px;
+    font-size:18px;
+    font-weight:600;
+    cursor:pointer;
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #3b82f6,
+        #8b5cf6
+    );
+
+    transition:.3s;
+}
+
+#analyzeBtn:hover{
+    transform:translateY(-3px);
+}
+
+#analyzeBtn.loading{
+    cursor:not-allowed;
+    opacity:.9;
+}
+
+.btn-loader{
+    display:none;
+    width:24px;
+    height:24px;
+    border:3px solid rgba(255,255,255,.3);
+    border-top:3px solid white;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:auto;
+}
+
+#analyzeBtn.loading .btn-loader{
+    display:inline-block;
+}
+
+#analyzeBtn.loading #btnText{
+    display:none;
+}
+
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+/* Result Section */
+
+.result-section{
+    margin-top:40px;
+
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+
+    gap:25px;
+}
+
+.result-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:20px;
+    padding:30px;
+
+    text-align:center;
+
+    animation:fadeUp .7s ease;
+}
+
+.result-card h3{
+    color:#94a3b8;
+}
+
+.result-card h2{
+    margin-top:15px;
+    font-size:34px;
+}
+
+/* Progress */
+
+.progress{
+    width:100%;
+    height:12px;
+    background:#334155;
+    border-radius:50px;
+    overflow:hidden;
+    margin-top:20px;
+}
+
+#progressBar{
+    width:0%;
+    height:100%;
+    border-radius:50px;
+
+    background:linear-gradient(
+        90deg,
+        #22c55e,
+        #3b82f6
+    );
+
+    transition:1s ease;
+}
+
+/* Animation */
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    nav{
+        padding:20px;
+    }
+
+    .input-card{
+        padding:25px;
+    }
+
+    textarea{
+        height:180px;
+    }
+
+}
