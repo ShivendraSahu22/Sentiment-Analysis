@@ -1,4 +1,5 @@
 import pickle
+from rnn_model import RNN
 
 with open('model/model1.pkl', 'rb') as f:
     model = pickle.load(f)
